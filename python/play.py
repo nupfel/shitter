@@ -49,11 +49,8 @@ while True:
         # tell ESP to start patterns
         esp.write(chr(1))
 
-        # wait for ESP to fade to darkness
-        sleep(1)
-
         print '--- Playing ' + wav_files[index] + ' ---'
-        subprocess.call(['aplay', music_dir + wav_files[index]])
+        subprocess.call(['aplay', '-B', '10000', '-R', '0', music_dir + wav_files[index]])
 
         # turn button LED back on
         GPIO.output(led_pin, GPIO.HIGH)
