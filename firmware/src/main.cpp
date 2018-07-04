@@ -4,6 +4,8 @@
 
 #include <FastLED.h>
 
+// #define DEBUG
+
 #define LED_PIN     D1
 #define CHIPSET     WS2812B
 #define WIDTH       30
@@ -78,10 +80,12 @@ void setup() {
         // Third, here's a simpler, three-step gradient, from black to red to white
         // gPal = CRGBPalette16( CRGB::Black, CRGB::Red, CRGB::White);
 
+#ifdef DEBUG
         Serial.println();
         Serial.println(HEIGHT);
         Serial.println(WIDTH);
         Serial.println(NUM_LEDS);
+#endif
         Serial.println("OK");
 }
 
@@ -89,6 +93,7 @@ void loop()
 {
         handle_serial();
 
+#ifdef DEBUG
         EVERY_N_SECONDS(1) {
                 Serial.printf("[%d]\n", millis());
                 Serial.printf("\tidle: %d\n", idle);
@@ -96,6 +101,7 @@ void loop()
                 Serial.printf("\tpattern_duration: %d\n", pattern_duration);
                 Serial.printf("\tfps: %d\n", fps);
         }
+#endif
 
         if (idle == true) {
                 idle_pattern();
@@ -167,7 +173,10 @@ void wave_up() {
         static uint8_t colour_index = 0;
 
         colour_index = (255/(HEIGHT - 1)) * y;
+
+#ifdef DEBUG
         Serial.printf("y: %d  c: %d\n", y, colour_index); //debug
+#endif
 
         fadeToBlackBy(leds, NUM_LEDS, 10);
 
@@ -183,7 +192,10 @@ void wave_down() {
         static uint8_t colour_index = 0;
 
         colour_index = (255/(HEIGHT - 1)) * y;
+
+#ifdef DEBUG
         Serial.printf("y: %d  c: %d\n", y, colour_index); //debug
+#endif
 
         fadeToBlackBy(leds, NUM_LEDS, 10);
 
@@ -199,7 +211,10 @@ void wave_left() {
         static uint8_t colour_index = 0;
 
         colour_index = (255/(WIDTH - 1)) * x;
+
+#ifdef DEBUG
         Serial.printf("x: %d  c: %d\n", x, colour_index); //debug
+#endif
 
         fadeToBlackBy(leds, NUM_LEDS, 10);
 
@@ -215,7 +230,10 @@ void wave_right() {
         static uint8_t colour_index = 0;
 
         colour_index = (255/(WIDTH - 1)) * x;
+
+#ifdef DEBUG
         Serial.printf("x: %d  c: %d\n", x, colour_index); //debug
+#endif
 
         fadeToBlackBy(leds, NUM_LEDS, 10);
 
