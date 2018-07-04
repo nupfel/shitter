@@ -4,10 +4,19 @@ from os import listdir
 import subprocess
 from time import sleep
 import RPi.GPIO as GPIO
+import serial
 
 button_pin = 22
 led_pin = 27
-music_dir = '../music'
+music_dir = '/home/pi/shitter/music/'
+serial_port = '/dev/ttyUSB0'
+
+esp = serial.Serial(
+    port=serial_port,
+    baudrate=115200
+)
+
+esp.isOpen() or exit(1)
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(button_pin, GPIO.IN)
@@ -19,7 +28,7 @@ GPIO.output(led_pin, GPIO.HIGH)
 state = GPIO.input(button_pin)
 index = 0
 
-wav_files = [ f for f in listdir(music_dir) if f[-4:] == '.wav' ]
+wav_files = [f for f in listdir(music_dir) if f[-4:] == '.wav']
 if not (len(wav_files) > 0):
     print "No files found!"
     exit()
@@ -33,12 +42,28 @@ while True:
 
     if (current_state != state):
         state = current_state
+
+        # turn button LED off while playing
         GPIO.output(led_pin, GPIO.LOW)
-        subprocess.Popen(['aplay', wav_files[index]])
+
+        # tell ESP to start patterns
+        esp.write(chr(1))
+
+        # wait for ESP to fade to darkness
+        sleep(3)
+
         print '--- Playing ' + wav_files[index] + ' ---'
+        subprocess.call(['aplay', music_dir + wav_files[index]])
+
+        # turn button LED back on
         GPIO.output(led_pin, GPIO.HIGH)
+
+        # tell ESP to go back to idle mode
+        esp.write(chr(0))
+
+        # loop through playlist
         index += 1
         if index >= len(wav_files):
             index = 0
-
-    sleep(0.1);
+    else:
+        sleep(0.1)
