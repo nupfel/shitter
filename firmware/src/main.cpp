@@ -157,12 +157,13 @@ void show() {
 
         gPatterns[gPatternIndex]();
 
-        EVERY_N_SECONDS(pattern_duration) {
+        EVERY_N_SECONDS_I(timer, pattern_duration) {
                 // switch to random pattern
                 gPatternIndex = random8(NUM_PATTERNS);
 
                 // choose random length for next pattern
                 pattern_duration = random8(pattern_duration_min, pattern_duration_max);
+                timer.setPeriod(pattern_duration);
 
                 Serial.printf("switching to pattern index %d for %ds\n", gPatternIndex, pattern_duration);
         }
