@@ -50,7 +50,7 @@ while True:
         esp.write(chr(1))
 
         # wait for ESP to fade to darkness
-        sleep(3)
+        sleep(1)
 
         print '--- Playing ' + wav_files[index] + ' ---'
         subprocess.call(['aplay', music_dir + wav_files[index]])
