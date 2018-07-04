@@ -6,7 +6,7 @@
 
 #define LED_PIN     D1
 #define CHIPSET     WS2812B
-#define WIDTH       8+8+8+6
+#define WIDTH       30
 #define HEIGHT      37
 #define NUM_LEDS    1110
 #define NUM_PATTERNS 4
@@ -171,9 +171,9 @@ void wave_up() {
 
         fadeToBlackBy(leds, NUM_LEDS, 10);
 
-        // for (uint8_t x = 0; x < WIDTH; x++) {
-        //         leds[x*HEIGHT+y] = ColorFromPalette(RainbowColors_p, colour_index);
-        // }
+        for (uint8_t x = 0; x < WIDTH; x++) {
+                leds[x*HEIGHT+y] = ColorFromPalette(RainbowColors_p, colour_index);
+        }
 
         y = (y + 1) % HEIGHT;
 }
@@ -187,9 +187,9 @@ void wave_down() {
 
         fadeToBlackBy(leds, NUM_LEDS, 10);
 
-        // for (uint8_t x = 0; x < WIDTH; x++) {
-        //         leds[x*HEIGHT+y] = ColorFromPalette(RainbowColors_p, colour_index);
-        // }
+        for (uint8_t x = 0; x < WIDTH; x++) {
+                leds[x*HEIGHT+y] = ColorFromPalette(RainbowColors_p, colour_index);
+        }
 
         y = (y - 1) % HEIGHT;
 }
