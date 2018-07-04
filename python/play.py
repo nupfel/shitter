@@ -50,7 +50,7 @@ while True:
         esp.write(chr(1))
 
         print '--- Playing ' + wav_files[index] + ' ---'
-        subprocess.call(['aplay', '-B', '10000', '-R', '0', music_dir + wav_files[index]])
+        subprocess.call(['aplay', '-B', '100000', '-R', '0', music_dir + wav_files[index]])
 
         # turn button LED back on
         GPIO.output(led_pin, GPIO.HIGH)
