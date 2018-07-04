@@ -132,19 +132,19 @@ void show() {
 
         gPatterns[gPatternIndex]();
         glitter();
-        
+
         EVERY_N_SECONDS_I(glitter_timer, random8(glitter_duration_min, glitter_duration_max)) {
                 add_glitter = !add_glitter;
                 glitter_timer.setPeriod(random8(glitter_duration_min, glitter_duration_max));
         }
 
-        EVERY_N_SECONDS_I(timer, pattern_duration) {
+        EVERY_N_SECONDS_I(pattern_timer, pattern_duration) {
                 // switch to random pattern
                 gPatternIndex = random8(NUM_PATTERNS);
 
                 // choose random length for next pattern
                 pattern_duration = random8(pattern_duration_min, pattern_duration_max);
-                timer.setPeriod(pattern_duration);
+                pattern_timer.setPeriod(pattern_duration);
 
                 Serial.printf("switching to pattern index %d for %ds\n", gPatternIndex, pattern_duration);
         }
@@ -213,6 +213,7 @@ void wave_left() {
         Serial.printf("x: %d  c: %d\n", x, colour_index); //debug
 #endif
 
+        // fade out within quarter of WIDTH
         fadeToBlackBy(leds, NUM_LEDS, 255/(WIDTH/4));
 
         for (uint8_t y = 0; y < HEIGHT; y++) {
@@ -234,6 +235,7 @@ void wave_right() {
         Serial.printf("x: %d  c: %d\n", x, colour_index); //debug
 #endif
 
+        // fade out within quarter of WIDTH
         fadeToBlackBy(leds, NUM_LEDS, 255/(WIDTH/4));
 
         for (uint8_t y = 0; y < HEIGHT; y++) {
@@ -245,11 +247,8 @@ void wave_right() {
 }
 
 void glitter() {
-        if (add_glitter) {
-                for (uint8_t i = 0; i < 20; i++) {
-                        leds[random16(NUM_LEDS)] += CRGB::White;
-                }
-        }
+        if (add_glitter)
+                leds[random16(NUM_LEDS)] += CRGB::White;
 }
 
 void idle_pattern() {
