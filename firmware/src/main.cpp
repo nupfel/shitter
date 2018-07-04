@@ -93,15 +93,15 @@ void loop()
 {
         handle_serial();
 
-#ifdef DEBUG
         EVERY_N_SECONDS(1) {
                 Serial.printf("[%d]\n", millis());
                 Serial.printf("\tidle: %d\n", idle);
-                Serial.printf("\tgPatternIndex: %d\n", gPatternIndex);
-                Serial.printf("\tpattern_duration: %d\n", pattern_duration);
-                Serial.printf("\tfps: %d\n", fps);
+                if (!idle) {
+                        Serial.printf("\tgPatternIndex: %d\n", gPatternIndex);
+                        Serial.printf("\tpattern_duration: %d\n", pattern_duration);
+                }
+                // Serial.printf("\tfps: %d\n", fps);
         }
-#endif
 
         if (idle == true) {
                 idle_pattern();
