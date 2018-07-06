@@ -9,14 +9,23 @@ import serial
 button_pin = 22
 led_pin = 27
 music_dir = '/home/pi/shitter/music/'
-serial_port = '/dev/ttyUSB0'
+serial_port = '/dev/ttyUSB'
 
-esp = serial.Serial(
-    port=serial_port,
-    baudrate=115200
-)
+def connect_serial:
+    try:
+        esp = serial.Serial(
+            port=serial_port + '0',
+            baudrate=115200
+        )
+    except:
+        esp = serial.Serial(
+            port=serial_port + '1',
+            baudrate=115200
+        )
 
-esp.isOpen() or exit(1)
+    esp.isOpen() or exit(1)
+
+connect_serial()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(button_pin, GPIO.IN)
@@ -47,7 +56,11 @@ while True:
         GPIO.output(led_pin, GPIO.LOW)
 
         # tell ESP to start patterns
-        esp.write(chr(1))
+        try:
+            esp.write(chr(1))
+        except:
+            connect_serial()
+            esp.write(chr(1))            
 
         print '--- Playing ' + wav_files[index] + ' ---'
         subprocess.call(['aplay', '-B', '100000', '-R', '0', music_dir + wav_files[index]])
@@ -56,7 +69,11 @@ while True:
         GPIO.output(led_pin, GPIO.HIGH)
 
         # tell ESP to go back to idle mode
-        esp.write(chr(0))
+        try:
+            esp.write(chr(0))
+        except:
+            connect_serial()
+            esp.write(chr(0))
 
         # loop through playlist
         index += 1
